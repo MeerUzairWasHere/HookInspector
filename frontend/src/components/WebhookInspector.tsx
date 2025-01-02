@@ -37,7 +37,6 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
           <Webhook className="text-black w-8 h-8" />
-
           <a href="/">Hook Inspector</a>
         </h1>
         <div className="flex flex-col sm:flex-row gap-2">

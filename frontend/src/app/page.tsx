@@ -76,12 +76,15 @@ function App() {
         </nav>
 
         {/* Hero Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-6xl">
               Debug HTTP Requests with Ease
             </h1>
-            <p className="mt-6 text-xl text-indigo-100 max-w-2xl mx-auto"></p>
+            <p className="mt-6 text-xl text-indigo-100 max-w-2xl mx-auto">
+              Inspect HTTP requests in real-time, debug webhooks, and analyze
+              HTTP traffic effortlessly with a free alternative.
+            </p>
             <div className="mt-10">
               <button
                 onClick={handleTryNow}
@@ -112,7 +115,7 @@ function App() {
             <Feature
               icon={Shield}
               title="Secure by Default"
-              description="All traffic is encrypted and automatically expires after 48 hours."
+              description="All traffic is encrypted and automatically expires after 24 hours."
             />
             <Feature
               icon={Zap}
