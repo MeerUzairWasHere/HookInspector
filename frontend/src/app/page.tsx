@@ -44,7 +44,7 @@ function App() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="bg-gradient-to-r from-indigo-600 to-indigo-800">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <Code2 className="w-8 h-8 text-white" />
@@ -65,7 +65,7 @@ function App() {
         </nav>
 
         {/* Hero Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white sm:text-6xl">
               Debug HTTP Requests with Ease

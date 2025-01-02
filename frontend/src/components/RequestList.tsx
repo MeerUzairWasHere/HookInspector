@@ -19,6 +19,46 @@ interface RequestListProps {
   onSelectRequest: (id: number) => void;
 }
 
+// export function RequestList({
+//   requests,
+//   selectedRequestId,
+//   onSelectRequest,
+// }: RequestListProps) {
+//   return (
+//     <ScrollArea className="h-[calc(100vh-2rem)]">
+//       {requests.map((request) => (
+//         <Card
+//           key={request.id}
+//           className={cn(
+//             "p-4 mb-2 cursor-pointer hover:bg-accent transition-colors",
+//             selectedRequestId === request.id && "border-primary"
+//           )}
+//           onClick={() => onSelectRequest(request.id)}
+//         >
+//           <div className="flex items-center justify-between mb-2">
+//             <Badge
+//               variant={
+//                 request.method === "GET"
+//                   ? "default"
+//                   : request.method === "POST"
+//                   ? "destructive"
+//                   : "secondary"
+//               }
+//             >
+//               {request.method}
+//             </Badge>
+//             <span className="text-sm text-muted-foreground">
+//               {formatDistanceToNow(new Date(request.timestamp), {
+//                 addSuffix: true,
+//               })}
+//             </span>
+//           </div>
+//           <p className="text-sm truncate">{request.webhookId}</p>
+//         </Card>
+//       ))}
+//     </ScrollArea>
+//   );
+// }
 export function RequestList({
   requests,
   selectedRequestId,
@@ -39,10 +79,16 @@ export function RequestList({
             <Badge
               variant={
                 request.method === "GET"
-                  ? "default"
+                  ? "get" // light or neutral
                   : request.method === "POST"
-                  ? "destructive"
-                  : "secondary"
+                  ? "post" // red or warning
+                  : request.method === "PUT"
+                  ? "put" // orange or alert
+                  : request.method === "PATCH"
+                  ? "patch" // orange or alert
+                  : request.method === "DELETE"
+                  ? "delete" // red or danger
+                  : "other" // default for others
               }
             >
               {request.method}

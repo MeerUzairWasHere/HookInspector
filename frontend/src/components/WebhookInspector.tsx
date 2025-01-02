@@ -31,23 +31,23 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
 
   const selectedRequest = requests.find((r) => r.id === selectedRequestId);
   return (
-    <div className="container mx-auto p-4 h-screen">
+    <div className="h-screen flex flex-col p-5">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
           <Link className="w-8 h-8" />
-          Hook Inspector
+         <a href="/">Hook Inspector</a>
         </h1>
-        <div className="flex gap-2">
-          <Input value={webhookUrl} readOnly className="font-mono" />
-          <Button onClick={copyUrl}>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Input value={webhookUrl} readOnly className="font-mono flex-1" />
+          <Button onClick={copyUrl} className="sm:w-auto">
             <Copy className="w-4 h-4 mr-2" />
             Copy URL
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-12rem)]">
-        <div className="border rounded-lg p-4">
+      <div className="flex-1 flex flex-col md:flex-row relative">
+        <div className="md:w-1/3 w-full h-full md:h-auto border-r border-gray-300 bg-white overflow-y-auto p-4">
           <h2 className="text-lg font-semibold mb-4">Requests</h2>
           <RequestList
             requests={requests}
@@ -55,13 +55,14 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
             onSelectRequest={(id) => setSelectedRequestId(id)}
           />
         </div>
-        <div className="border rounded-lg p-4">
+
+        <div className="md:w-2/3 w-full h-full md:h-auto bg-white overflow-y-auto p-4">
           <h2 className="text-lg font-semibold mb-4">Details</h2>
           {selectedRequest ? (
             <RequestDetails request={selectedRequest} />
           ) : (
             <p className="text-muted-foreground">
-              Select a request to see details.
+              Waiting for requests to be sent...
             </p>
           )}
         </div>

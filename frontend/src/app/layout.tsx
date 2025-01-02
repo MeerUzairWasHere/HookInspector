@@ -6,7 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Webhook Inspector",
+  title: "Hook Inspector",
   description: "A modern webhook testing and inspection tool",
 };
 
