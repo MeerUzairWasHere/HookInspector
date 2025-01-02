@@ -1,8 +1,8 @@
 # HookInspector
 
-**Inspect HTTP requests in real-time, debug webhooks, and analyze HTTP traffic effortlessly with a free alternative.**
+*Inspect HTTP requests in real-time, debug webhooks, and analyze HTTP traffic effortlessly with a free alternative.*
 
-Made out of necessity, because I needed a webhook service, but it was paid — so I made it free for you! ❤️
+> Made out of necessity, because I needed a webhook service, but it was paid — so I made it free for you! ❤️
 
 This is a simple webhook service that allows you to send and view HTTP requests. It's completely free, and the best part is that your webhooks will be cleared after 24 hours, making it a temporary but useful solution.
 
