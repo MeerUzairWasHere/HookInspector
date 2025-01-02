@@ -123,7 +123,7 @@ function App() {
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center w-full">
             <div className="flex items-center justify-center space-x-2 w-full">
-              <span className="text-gray-400 text-sm">
+              <span className="text-gray-400 text-sm text-center">
                 Made out of necessity, because I needed it, and it was paid — so
                 I made it free for you! ❤️
               </span>
