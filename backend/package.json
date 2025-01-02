@@ -1,0 +1,42 @@
+{
+  "name": "hookinspector",
+  "version": "1.0.0",
+  "description": "Capture and inspect HTTP requests with ease.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeerUzairWasHere/HookInspector.git"
+  },
+  "keywords": [
+    "httpdump",
+    "webhook",
+    "webhook",
+    "inspector"
+  ],
+  "author": "https://github.com/MeerUzairWasHere",
+  "license": "https://github.com/MeerUzairWasHere/HookInspector/blob/main/LICENSE",
+  "bugs": {
+    "url": "https://github.com/MeerUzairWasHere/HookInspector/issues"
+  },
+  "homepage": "https://github.com/MeerUzairWasHere/HookInspector#readme",
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.3",
+    "@types/node-cron": "^3.0.11",
+    "axios": "^1.7.9",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "node-cron": "^3.0.3",
+    "prisma": "^6.1.0",
+    "uuid": "^11.0.3"
+  }
+}
