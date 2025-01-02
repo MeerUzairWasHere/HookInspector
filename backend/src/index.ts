@@ -64,3 +64,17 @@ cron.schedule("*/14 * * * *", async () => {
       console.error(`Health check failed: ${error.message}`);
   }
 });
+
+// Schedule clearing database (every 24 hours)
+cron.schedule("0 0 * * *", async () => {
+  try {
+    await prisma.incomingRequest.deleteMany({});
+    await prisma.webhook.deleteMany({});
+    console.log("IncomingRequest table cleared successfully!");
+    console.log("Webhook table cleared successfully!");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error clearing IncomingRequest table:", error.message);
+    }
+  }
+});
