@@ -66,7 +66,7 @@ cron.schedule("*/14 * * * *", async () => {
 });
 
 // Schedule clearing database (every 24 hours)
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     await prisma.incomingRequest.deleteMany({});
     await prisma.webhook.deleteMany({});
