@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Link } from "lucide-react";
+import { Copy, Link, Webhook } from "lucide-react";
 import { Request, RequestList } from "./RequestList";
 import { useWebhookUrl } from "@/lib/hooks/useWebhookUrl";
 import axios from "axios";
@@ -34,8 +34,9 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
     <div className="h-screen flex flex-col p-5">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
-          <Link className="w-8 h-8" />
-         <a href="/">Hook Inspector</a>
+          <Webhook className="text-black w-8 h-8" />
+
+          <a href="/">Hook Inspector</a>
         </h1>
         <div className="flex flex-col sm:flex-row gap-2">
           <Input value={webhookUrl} readOnly className="font-mono flex-1" />

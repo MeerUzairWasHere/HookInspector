@@ -1,8 +1,17 @@
 "use client";
-import { Code2, Globe, Zap, Shield, ArrowRight, Github } from "lucide-react";
+import {
+  Code2,
+  Globe,
+  Zap,
+  Shield,
+  ArrowRight,
+  Github,
+  Webhook,
+} from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { WEBHOOK_URL } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
 function Feature({
   icon: Icon,
@@ -47,7 +56,7 @@ function App() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              <Code2 className="w-8 h-8 text-white" />
+              <Webhook className="text-white w-8 h-8" />
               <span className="text-white text-xl font-bold">
                 Hook Inspector
               </span>
@@ -58,7 +67,9 @@ function App() {
                 target="_blank"
                 className="text-indigo-100 hover:text-white transition"
               >
-                <Github className="w-6 h-6" />
+                <Button>
+                  <Github className="w-6 h-6" /> Give a Star
+                </Button>
               </a>
             </div>
           </div>
@@ -70,10 +81,7 @@ function App() {
             <h1 className="text-4xl font-bold text-white sm:text-6xl">
               Debug HTTP Requests with Ease
             </h1>
-            <p className="mt-6 text-xl text-indigo-100 max-w-2xl mx-auto">
-              Inspect HTTP requests in real-time. Debug webhooks, test API
-              integrations, and analyze HTTP traffic effortlessly.
-            </p>
+            <p className="mt-6 text-xl text-indigo-100 max-w-2xl mx-auto"></p>
             <div className="mt-10">
               <button
                 onClick={handleTryNow}
@@ -88,7 +96,7 @@ function App() {
       </header>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
+      <section id="features" className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900">
