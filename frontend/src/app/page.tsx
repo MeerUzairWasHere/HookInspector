@@ -1,13 +1,5 @@
 "use client";
-import {
-  Code2,
-  Globe,
-  Zap,
-  Shield,
-  ArrowRight,
-  Github,
-  Webhook,
-} from "lucide-react";
+import { Globe, Zap, Shield, ArrowRight, Github, Webhook } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { WEBHOOK_URL } from "@/lib/constants";
@@ -127,29 +119,18 @@ function App() {
       </section>
 
       {/* Footer */}
-      {/* <footer className="bg-gray-900">
+      <footer className="bg-gray-900">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <Code2 className="w-6 h-6 text-gray-400" />
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center justify-center space-x-2 w-full">
               <span className="text-gray-400 text-sm">
-                © 2025 HookInspector. All rights reserved.
+                Made out of necessity, because I needed it, and it was paid — so
+                I made it free for you! ❤️
               </span>
-            </div>
-            <div className="flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-gray-300">
-                Terms
-              </a>
-              <a href="#" className="text-gray-400 hover:text-gray-300">
-                Privacy
-              </a>
-              <a href="#" className="text-gray-400 hover:text-gray-300">
-                Contact
-              </a>
             </div>
           </div>
         </div>
-      </footer> */}
+      </footer>
     </div>
   );
 }
