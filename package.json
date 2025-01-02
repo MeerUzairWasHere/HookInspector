@@ -23,15 +23,17 @@
   },
   "homepage": "https://github.com/MeerUzairWasHere/HookInspector#readme",
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/node": "^22.10.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
-    "prisma": "^6.1.0",
+    "prisma": "^5.22.0",
     "uuid": "^11.0.3"
   }
 }

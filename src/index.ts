@@ -1,5 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
+
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -9,7 +11,7 @@ import webhookRoutes from "./routes/webhook.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const prisma = new PrismaClient();
 // Middleware
 app.use(bodyParser.json());
 app.use(
@@ -30,6 +32,16 @@ app.use(
 // Routes
 app.use("/webhook", webhookRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Start the server
+const startServer = async () => {
+  try {
+    await prisma.$connect();
+    app.listen(PORT, () => {
+      console.log(`Server is listening on http://localhost:${PORT}/...`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+startServer();
