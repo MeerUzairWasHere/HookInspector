@@ -21,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/MeerUzairWasHere/HookInspector/issues"
   },
-  "homepage": "https://github.com/MeerUzairWasHere/HookInspector#readme"
+  "homepage": "https://github.com/MeerUzairWasHere/HookInspector#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "prisma": "^6.1.0",
+    "uuid": "^11.0.3"
+  }
 }
