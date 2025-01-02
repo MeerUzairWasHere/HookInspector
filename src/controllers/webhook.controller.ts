@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { prisma } from "..";
+import { prisma } from "../index";
+import { IncomingRequest, Webhook } from "@prisma/client";
 
 // Generate a unique URL
 export const generateWebhookUrl = async (req: Request, res: Response) => {
   const uniqueId = uuidv4();
-  const url = `https://hookInspector.onrender.com/webhook/${uniqueId}`;
+  const url = `https://hookinspector.onrender.com/webhook/${uniqueId}`;
 
   // Create a new webhook entry in the database
   await prisma.webhook.create({
@@ -19,7 +20,10 @@ export const generateWebhookUrl = async (req: Request, res: Response) => {
 };
 
 // Handle incoming requests to the unique URL
-export const handleWebhookRequest = async (req: Request, res: Response) => {
+export const handleWebhookRequest = async (
+  req: Request<any, {}, IncomingRequest>,
+  res: Response
+) => {
   const { id } = req.params;
 
   // Check if the URL exists in the database
@@ -57,11 +61,14 @@ export const handleWebhookRequest = async (req: Request, res: Response) => {
     },
   });
 
-  res.status(200).json({ message: "Request captured and verified", payload });
+  res.status(200).json({ message: "Request captured", payload });
 };
 
 // Get stored requests for a specific URL
-export const getStoredRequests = async (req: Request, res: Response) => {
+export const getStoredRequests = async (
+  req: Request<any, {}, Webhook>,
+  res: Response
+) => {
   const { id } = req.params;
 
   // Check if the URL exists in the database
