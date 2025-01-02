@@ -35,13 +35,6 @@ export const handleWebhookRequest = async (
     return res.status(404).json({ error: "Webhook URL not found" });
   }
 
-  // Extract the signature header
-  const receivedSignature = req.headers["x-bqecore-signature"];
-
-  if (!receivedSignature) {
-    return res.status(400).json({ error: "The request is not from bqe core" });
-  }
-
   // Capture the request data
   const payload = {
     method: req.method,

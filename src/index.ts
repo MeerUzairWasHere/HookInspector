@@ -33,6 +33,10 @@ app.use(
 // Routes
 app.use("/webhook", webhookRoutes);
 
+app.use("/health", (req, res) => {
+  res.status(200).json({ message: "Server is running" });
+});
+
 // Start the server
 const startServer = async () => {
   try {
