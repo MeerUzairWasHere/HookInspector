@@ -59,7 +59,6 @@ function App() {
                 className="text-indigo-100 hover:text-white transition"
               >
                 <Github className="w-6 h-6" />
-                GitHub
               </a>
             </div>
           </div>

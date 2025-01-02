@@ -16,10 +16,12 @@ export function useRequests() {
         const res = await axios.get(`${webhookUrl}/requests`);
         setRequests(res.data.requests);
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch webhook requests.",
-        });
+        if (error instanceof Error) {
+          toast({
+            title: "Error",
+            description: "Failed to fetch webhook requests.",
+          });
+        }
       }
     };
 
