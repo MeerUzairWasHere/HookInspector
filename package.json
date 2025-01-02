@@ -1,0 +1,25 @@
+{
+  "name": "hookinspector",
+  "version": "1.0.0",
+  "description": "Capture and inspect HTTP requests with ease.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeerUzairWasHere/HookInspector.git"
+  },
+  "keywords": [
+    "httpdump",
+    "webhook",
+    "webhook",
+    "inspector"
+  ],
+  "author": "https://github.com/MeerUzairWasHere",
+  "license": "https://github.com/MeerUzairWasHere/HookInspector/blob/main/LICENSE",
+  "bugs": {
+    "url": "https://github.com/MeerUzairWasHere/HookInspector/issues"
+  },
+  "homepage": "https://github.com/MeerUzairWasHere/HookInspector#readme"
+}
