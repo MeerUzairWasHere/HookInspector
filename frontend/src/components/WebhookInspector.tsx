@@ -17,16 +17,18 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
   );
 
   useEffect(() => {
-    const getRequests = async () => {
-      try {
-        const response = await axios.get(`${webhookUrl}/requests`);
-        setRequests(response.data);
-        setSelectedRequestId(response.data[0]?.id ?? null);
-      } catch (error) {
-        console.error("Error fetching requests:", error);
-      }
-    };
-    getRequests();
+    setInterval(() => {
+      const getRequests = async () => {
+        try {
+          const response = await axios.get(`${webhookUrl}/requests`);
+          setRequests(response.data);
+          setSelectedRequestId(response.data[0]?.id ?? null);
+        } catch (error) {
+          console.error("Error fetching requests:", error);
+        }
+      };
+      getRequests();
+    }, 30000);
   }, [webhookUrl]);
 
   const selectedRequest = requests.find((r) => r.id === selectedRequestId);
