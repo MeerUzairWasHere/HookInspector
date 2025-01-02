@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -6,7 +8,7 @@ import rateLimiter from "express-rate-limit";
 import webhookRoutes from "./routes/webhook.routes";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
@@ -15,9 +17,9 @@ app.use(
     origin: "*",
   })
 );
+
 // Security
 app.set("trust proxy", 1);
-
 app.use(
   rateLimiter({
     windowMs: 15 * 60 * 1000,
