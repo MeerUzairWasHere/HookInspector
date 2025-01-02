@@ -1,33 +1,35 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Copy, Link } from "lucide-react";
 import { Request, RequestList } from "./RequestList";
-import { RequestDetails } from "./RequestDetails";
 import { useWebhookUrl } from "@/lib/hooks/useWebhookUrl";
 import axios from "axios";
+import { RequestDetails } from "./RequestDetails";
 
 export function WebhookInspector({ uuid }: { uuid: string }) {
   const { webhookUrl, copyUrl } = useWebhookUrl(uuid);
-  const [requests, setRequests] = useState<Request[] | null>(null);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
     null
   );
+
   useEffect(() => {
     const getRequests = async () => {
-      const response = await axios.get(webhookUrl + "/requests");
-      setRequests(response.data);
+      try {
+        const response = await axios.get(`${webhookUrl}/requests`);
+        setRequests(response.data);
+        setSelectedRequestId(response.data[0]?.id ?? null);
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+      }
     };
     getRequests();
-  }, [uuid]);
-  console.log(requests);
-  
-  if (!requests) {
-    return null;
-  }
-  const selectedRequest = requests.find((r) => r.id === selectedRequestId);
+  }, [webhookUrl]);
 
+  const selectedRequest = requests.find((r) => r.id === selectedRequestId);
   return (
     <div className="container mx-auto p-4 h-screen">
       <div className="mb-6">
@@ -48,14 +50,20 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
         <div className="border rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4">Requests</h2>
           <RequestList
-            requests={requests || []}
+            requests={requests}
             selectedRequestId={selectedRequestId}
-            onSelectRequest={setSelectedRequestId}
+            onSelectRequest={(id) => setSelectedRequestId(id)}
           />
         </div>
         <div className="border rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4">Details</h2>
-          {/* <RequestDetails request={selectedRequest} /> */}
+          {selectedRequest ? (
+            <RequestDetails request={selectedRequest} />
+          ) : (
+            <p className="text-muted-foreground">
+              Select a request to see details.
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ interface RequestDetailsProps {
 }
 
 export function RequestDetails({ request }: RequestDetailsProps) {
+  console.log(request);
   if (!request) {
     return (
       <div className="h-full flex items-center justify-center text-muted-foreground">
