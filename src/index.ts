@@ -11,7 +11,8 @@ import webhookRoutes from "./routes/webhook.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const prisma = new PrismaClient();
+
+export const prisma = new PrismaClient();
 // Middleware
 app.use(bodyParser.json());
 app.use(

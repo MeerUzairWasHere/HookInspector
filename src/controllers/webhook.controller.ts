@@ -1,24 +1,41 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-
-// In-memory data store
-const webhookStore: Record<string, any[]> = {};
+import { prisma } from "..";
 
 // Generate a unique URL
-export const generateWebhookUrl = (req: Request, res: Response) => {
+export const generateWebhookUrl = async (req: Request, res: Response) => {
   const uniqueId = uuidv4();
-  // Initialize an empty array for storing requests
-  webhookStore[uniqueId] = [];
-  res.json({ url: `/webhook/${uniqueId}` });
+  const url = `https://hookInspector.onrender.com/webhook/${uniqueId}`;
+
+  // Create a new webhook entry in the database
+  await prisma.webhook.create({
+    data: {
+      id: uniqueId,
+      url: url,
+    },
+  });
+
+  res.json({ url });
 };
 
 // Handle incoming requests to the unique URL
-export const handleWebhookRequest = (req: Request, res: Response) => {
+export const handleWebhookRequest = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  // Check if the URL exists
-  if (!webhookStore[id]) {
+  // Check if the URL exists in the database
+  const webhook = await prisma.webhook.findUnique({
+    where: { id },
+  });
+
+  if (!webhook) {
     return res.status(404).json({ error: "Webhook URL not found" });
+  }
+
+  // Extract the signature header
+  const receivedSignature = req.headers["x-bqecore-signature"];
+
+  if (!receivedSignature) {
+    return res.status(400).json({ error: "The request is not from bqe core" });
   }
 
   // Capture the request data
@@ -29,19 +46,33 @@ export const handleWebhookRequest = (req: Request, res: Response) => {
     timestamp: new Date(),
   };
 
-  // Store the request data
-  webhookStore[id].push(payload);
+  // Store the incoming request data in the database
+  await prisma.incomingRequest.create({
+    data: {
+      webhookId: webhook.id,
+      method: req.method,
+      headers: req.headers,
+      body: req.body,
+      timestamp: new Date(),
+    },
+  });
 
   res.status(200).json({ message: "Request captured and verified", payload });
 };
 
 // Get stored requests for a specific URL
-export const getStoredRequests = (req: Request, res: Response) => {
+export const getStoredRequests = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  // Check if the URL exists
-  if (!webhookStore[id]) {
+  // Check if the URL exists in the database
+  const webhook = await prisma.webhook.findUnique({
+    where: { id },
+    include: { requests: true }, // Include associated requests
+  });
+
+  if (!webhook) {
     return res.status(404).json({ error: "Webhook URL not found" });
   }
-  res.json(webhookStore[id]);
+
+  res.json(webhook.requests);
 };

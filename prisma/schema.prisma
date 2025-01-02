@@ -12,3 +12,20 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Webhook {
+  id        String            @id @unique @default(uuid())
+  url       String            @unique
+  createdAt DateTime          @default(now())
+  requests  IncomingRequest[]
+}
+
+model IncomingRequest {
+  id        Int      @id @default(autoincrement())
+  webhookId String
+  method    String
+  headers   Json
+  body      Json
+  timestamp DateTime @default(now())
+  webhook   Webhook  @relation(fields: [webhookId], references: [id])
+}
