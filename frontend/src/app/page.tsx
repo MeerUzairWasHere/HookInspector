@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { WEBHOOK_URL } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 function Feature({
   icon: Icon,
@@ -114,6 +115,62 @@ function App() {
               title="Lightning Fast"
               description="Built for performance with instant updates and minimal latency."
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Try Now Section */}
+      <section id="try-now" className="py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-900 rounded-lg shadow-xl overflow-hidden">
+            <div className="px-6 py-8 sm:p-10">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-semibold text-white">
+                  Revisit Your Webhook URL
+                </h3>
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                  onClick={() => {
+                    const inputElement = document.getElementById(
+                      "webhook-input"
+                    ) as HTMLInputElement | null;
+                    const inputValue = inputElement?.value;
+
+                    if (
+                      inputValue &&
+                      /^https:\/\/hookinspector\.onrender\.com\/webhook\/[a-f0-9\-]{36}$/.test(
+                        inputValue
+                      )
+                    ) {
+                      const id = inputValue.split("/").pop(); // Extract the ID
+                      router.push(`/${id}`);
+                    } else {
+                      toast({
+                        title: "Error",
+                        description: "Please enter a valid webhook URL.",
+                      });
+                    }
+                  }}
+                >
+                  Inspect
+                </button>
+              </div>
+              <div className="mt-4 bg-gray-800 rounded-md p-4">
+                <input
+                  id="webhook-input"
+                  type="text"
+                  placeholder="https://hookinspector.onrender.com/webhook/your-unique-id"
+                  className="w-full bg-gray-700 text-white p-2 rounded-md"
+                  pattern="https://hookinspector\.onrender\.com/webhook/[a-f0-9\-]{36}"
+                  title="Please enter a valid URL in the format https://hookinspector.onrender.com/webhook/your-unique-id"
+                />
+              </div>
+              <p className="mt-4 text-sm text-gray-400">
+                Already have a generated URL? Enter it here to revisit and
+                inspect your HTTP calls or webhooks. Simply paste your webhook
+                URL to return to the inspection page.
+              </p>
+            </div>
           </div>
         </div>
       </section>
