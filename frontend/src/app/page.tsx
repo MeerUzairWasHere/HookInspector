@@ -1,5 +1,6 @@
 "use client";
-import { Globe, Zap, Shield, ArrowRight, Github, Webhook } from "lucide-react";
+import { useState } from "react";
+import { Globe, Zap, Shield, ArrowRight, Github, Webhook, Loader } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { WEBHOOK_URL } from "@/lib/constants";
@@ -30,8 +31,10 @@ function Feature({
 
 function App() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleTryNow = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(WEBHOOK_URL + "/generate");
       const id = response.data.url.split("/").pop(); // Extract the ID from the generated URL
@@ -39,6 +42,8 @@ function App() {
     } catch (error) {
       console.error("Failed to generate webhook URL", error);
       alert("Error generating webhook URL. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,10 +86,22 @@ function App() {
             <div className="mt-10">
               <button
                 onClick={handleTryNow}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 transition"
+                disabled={loading}
+                className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 transition ${
+                  loading ? "opacity-70 cursor-not-allowed" : ""
+                }`}
               >
-                Try Now
-                <ArrowRight className="ml-2 w-5 h-5" />
+                {loading ? (
+                  <>
+                    <Loader className="mr-2 w-5 h-5 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    Try Now
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </>
+                )}
               </button>
             </div>
           </div>
