@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Copy, Link, Webhook } from "lucide-react";
@@ -8,14 +8,16 @@ import { Request, RequestList } from "./RequestList";
 import { useWebhookUrl } from "@/lib/hooks/useWebhookUrl";
 import axios from "axios";
 import { RequestDetails } from "./RequestDetails";
+import NavLink from "next/link";
 
 export function WebhookInspector({ uuid }: { uuid: string }) {
   const { webhookUrl, copyUrl } = useWebhookUrl(uuid);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [error, setError] = useState<boolean>(false);
+
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
     null
   );
-
   useEffect(() => {
     const getRequests = async () => {
       try {
@@ -23,6 +25,7 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
         setRequests(response.data);
         setSelectedRequestId(response.data[0]?.id ?? null);
       } catch (error) {
+        setError(true);
         console.error("Error fetching requests:", error);
       }
     };
@@ -37,6 +40,18 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
   }, [webhookUrl]);
 
   const selectedRequest = requests.find((r) => r.id === selectedRequestId);
+
+  if (error) {
+    return (
+      <div className="flex items-center flex-col justify-center h-screen text-red-500">
+        <div className="mb-5 ">Error fetching requests</div>
+        <Button asChild variant="destructive">
+          <NavLink href="/">Go back</NavLink>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col p-5">
       <div className="mb-6">
