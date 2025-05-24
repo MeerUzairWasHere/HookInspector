@@ -1,107 +1,87 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
+import clsx from "clsx";
+import Link from "next/link";
 
-export interface Request {
-  id: number; // Matches Prisma schema for autoincrement ID
+export type WebhookRequest = {
+  id: number;
   webhookId: string;
-  method: string;
-  headers: Record<string, string>; // Assuming headers are key-value pairs
-  body: Record<string, unknown>; // Body stored as JSON
-  timestamp: Date;
-}
+  method: string; // or more specific: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | etc.
+  headers: {
+    host?: string;
+    accept?: string;
+    cookie?: string;
+    connection?: string;
+    "user-agent"?: string;
+    "content-type"?: string;
+    "cache-control"?: string;
+    "postman-token"?: string;
+    "content-length"?: string;
+    "accept-encoding"?: string;
+    [key: string]: string | undefined; // for any additional headers
+  };
+  body: Record<string, any> | null; // or more specific if you know the body structure
+  timestamp: string; // or Date if you parse it
+  status: number;
+  size: number;
+  duration: number;
+  createdAt: string;
+};
 
-interface RequestListProps {
-  requests: Request[];
-  selectedRequestId: number | null;
-  onSelectRequest: (id: number) => void;
-}
-
-// export function RequestList({
-//   requests,
-//   selectedRequestId,
-//   onSelectRequest,
-// }: RequestListProps) {
-//   return (
-//     <ScrollArea className="h-[calc(100vh-2rem)]">
-//       {requests.map((request) => (
-//         <Card
-//           key={request.id}
-//           className={cn(
-//             "p-4 mb-2 cursor-pointer hover:bg-accent transition-colors",
-//             selectedRequestId === request.id && "border-primary"
-//           )}
-//           onClick={() => onSelectRequest(request.id)}
-//         >
-//           <div className="flex items-center justify-between mb-2">
-//             <Badge
-//               variant={
-//                 request.method === "GET"
-//                   ? "default"
-//                   : request.method === "POST"
-//                   ? "destructive"
-//                   : "secondary"
-//               }
-//             >
-//               {request.method}
-//             </Badge>
-//             <span className="text-sm text-muted-foreground">
-//               {formatDistanceToNow(new Date(request.timestamp), {
-//                 addSuffix: true,
-//               })}
-//             </span>
-//           </div>
-//           <p className="text-sm truncate">{request.webhookId}</p>
-//         </Card>
-//       ))}
-//     </ScrollArea>
-//   );
-// }
-export function RequestList({
-  requests,
-  selectedRequestId,
-  onSelectRequest,
-}: RequestListProps) {
+const RequestList = ({ request }: { request: WebhookRequest }) => {
   return (
-    <ScrollArea className="h-[calc(100vh-2rem)]">
-      {requests.map((request) => (
-        <Card
-          key={request.id}
-          className={cn(
-            "p-4 mb-2 cursor-pointer hover:bg-accent transition-colors",
-            selectedRequestId === request.id && "border-primary"
+    <tr className="">
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+        <span className="text-xs">
+          {new Date(request.timestamp).toLocaleDateString()}{" "}
+          {new Date(request.timestamp).toLocaleTimeString()}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span
+          className={clsx(
+            "px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full",
+            request.method === "GET"
+              ? "bg-green-100 text-green-800"
+              : request.method === "POST"
+              ? "bg-yellow-100 text-yellow-800"
+              : request.method === "PUT"
+              ? "bg-blue-100 text-blue-800"
+              : request.method === "DELETE"
+              ? "bg-red-100 text-red-800"
+              : request.method === "PATCH"
+              ? "bg-purple-100 text-purple-800"
+              : "bg-gray-100 text-gray-800"
           )}
-          onClick={() => onSelectRequest(request.id)}
         >
-          <div className="flex items-center justify-between mb-2">
-            <Badge
-              variant={
-                request.method === "GET"
-                  ? "get" // light or neutral
-                  : request.method === "POST"
-                  ? "post" // red or warning
-                  : request.method === "PUT"
-                  ? "put" // orange or alert
-                  : request.method === "PATCH"
-                  ? "patch" // orange or alert
-                  : request.method === "DELETE"
-                  ? "delete" // red or danger
-                  : "other" // default for others
-              }
-            >
-              {request.method}
-            </Badge>
-            <span className="text-sm text-muted-foreground">
-              {formatDistanceToNow(new Date(request.timestamp), {
-                addSuffix: true,
-              })}
-            </span>
-          </div>
-          <p className="text-sm truncate">{request.webhookId}</p>
-        </Card>
-      ))}
-    </ScrollArea>
+          {request.method}
+        </span>
+      </td>
+
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span
+          className={clsx(
+            "text-sm  font-medium",
+            request.status === 200 ? "text-green-600" : "text-red-600"
+          )}
+        >
+          {request.status || 200} {request.status === 200 ? "OK" : "Error"}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+        {request.size} KB
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+        {request.duration} ms
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        <Link
+          href={`/${request.webhookId}/detail/${request.id}`}
+          className="text-[#2563eb] hover:text-blue-700 focus:outline-none"
+          data-request-id="req1"
+        >
+          View Details
+        </Link>
+      </td>
+    </tr>
   );
-}
+};
+export default RequestList;
