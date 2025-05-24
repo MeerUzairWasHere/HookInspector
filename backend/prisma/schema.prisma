@@ -28,4 +28,8 @@ model IncomingRequest {
   body      Json
   timestamp DateTime @default(now())
   webhook   Webhook  @relation(fields: [webhookId], references: [id])
+  status    Int
+  size      Int
+  duration  Int
+  createdAt DateTime @default(now())
 }
