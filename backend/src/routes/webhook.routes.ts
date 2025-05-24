@@ -3,6 +3,7 @@ import {
   generateWebhookUrl,
   handleWebhookRequest,
   getStoredRequests,
+  getSigleStoredRequest,
 } from "../controllers/webhook.controller";
 
 const router = Router();
@@ -24,6 +25,12 @@ router
   .route("/:id/requests")
   .get((req: Request, res: Response, next: NextFunction) => {
     getStoredRequests(req, res);
+  });
+
+router
+  .route("/:webhookId/requests/:id")
+  .get((req: Request, res: Response, next: NextFunction) => {
+    getSigleStoredRequest(req, res);
   });
 
 export default router;
