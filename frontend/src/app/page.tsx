@@ -169,6 +169,9 @@ function App() {
                         )) ||
                       /^http:\/\/localhost:3000\/webhook\/[a-f0-9\-]{36}$/.test(
                         inputValue
+                      ) ||
+                      /^https:\/\/hookinspector.onrender.com\/webhook\/[a-f0-9\-]{36}$/.test(
+                        inputValue
                       )
                     ) {
                       const id = inputValue.split("/").pop(); // Extract the ID
