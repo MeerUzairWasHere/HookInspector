@@ -1,9 +1,16 @@
 "use client";
 import { useState } from "react";
-import { Globe, Zap, Shield, ArrowRight, Github, Webhook, Loader } from "lucide-react";
+import {
+  Globe,
+  Zap,
+  Shield,
+  ArrowRight,
+  Github,
+  Webhook,
+  Loader,
+} from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { WEBHOOK_URL } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -36,7 +43,9 @@ function App() {
   const handleTryNow = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(WEBHOOK_URL + "/generate");
+      const response = await axios.get(
+        process.env.NEXT_PUBLIC_BASE_URL + "/webhook/generate"
+      );
       const id = response.data.url.split("/").pop(); // Extract the ID from the generated URL
       router.push(`/${id}`);
     } catch (error) {
@@ -154,8 +163,11 @@ function App() {
                     const inputValue = inputElement?.value;
 
                     if (
-                      inputValue &&
-                      /^https:\/\/hookinspector\.onrender\.com\/webhook\/[a-f0-9\-]{36}$/.test(
+                      (inputValue &&
+                        /^https:\/\/hookinspector\.onrender\.com\/webhook\/[a-f0-9\-]{36}$/.test(
+                          inputValue
+                        )) ||
+                      /^http:\/\/localhost:3000\/webhook\/[a-f0-9\-]{36}$/.test(
                         inputValue
                       )
                     ) {
