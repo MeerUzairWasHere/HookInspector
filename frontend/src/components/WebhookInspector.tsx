@@ -1,45 +1,24 @@
-"use client";
-
-import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Copy, Link, Webhook } from "lucide-react";
-import { Request, RequestList } from "./RequestList";
-import { useWebhookUrl } from "@/lib/hooks/useWebhookUrl";
 import axios from "axios";
-import { RequestDetails } from "./RequestDetails";
 import NavLink from "next/link";
+import RequestList from "./RequestList";
+import Empty from "./Empty";
+import CopyUrl from "./CopyUrl";
+import { GlobalBackButton } from "./GlobalBackButton";
 
-export function WebhookInspector({ uuid }: { uuid: string }) {
-  const { webhookUrl, copyUrl } = useWebhookUrl(uuid);
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [error, setError] = useState<boolean>(false);
+export async function WebhookInspector({ uuid }: { uuid: string }) {
+  const webhookUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/webhook/${uuid}`;
 
-  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
-    null
-  );
-  useEffect(() => {
-    const getRequests = async () => {
-      try {
-        const response = await axios.get(`${webhookUrl}/requests`);
-        setRequests(response.data);
-        setSelectedRequestId(response.data[0]?.id ?? null);
-      } catch (error) {
-        setError(true);
-        console.error("Error fetching requests:", error);
-      }
-    };
-    getRequests();
+  let requests = [];
+  let error = false;
 
-    const intervalId = setInterval(() => {
-      getRequests();
-    }, 30000);
-
-    // Cleanup function to clear the interval when the component unmounts or webhookUrl changes
-    return () => clearInterval(intervalId);
-  }, [webhookUrl]);
-
-  const selectedRequest = requests.find((r) => r.id === selectedRequestId);
+  try {
+    const response = await axios.get(`${webhookUrl}/requests`);
+    requests = response.data;
+  } catch (err) {
+    error = true;
+    console.error("Error fetching requests:", err);
+  }
 
   if (error) {
     return (
@@ -51,44 +30,164 @@ export function WebhookInspector({ uuid }: { uuid: string }) {
       </div>
     );
   }
-
   return (
-    <div className="h-screen flex flex-col p-5">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
-          <Webhook className="text-black w-8 h-8" />
-          <a href="/">Hook Inspector</a>
-        </h1>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Input value={webhookUrl} readOnly className="font-mono flex-1" />
-          <Button onClick={copyUrl} className="sm:w-auto">
-            <Copy className="w-4 h-4 mr-2" />
-            Copy URL
-          </Button>
-        </div>
-      </div>
+    <section
+      id="requestInspectionPanel"
+      className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <GlobalBackButton />
 
-      <div className="flex-1 flex flex-col md:flex-row relative">
-        <div className="md:w-1/3 w-full h-full md:h-auto border-r border-gray-300 bg-white overflow-y-auto p-4">
-          <h2 className="text-lg font-semibold mb-4">Requests</h2>
-          <RequestList
-            requests={requests}
-            selectedRequestId={selectedRequestId}
-            onSelectRequest={(id) => setSelectedRequestId(id)}
-          />
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-[#1e293b] mb-4">
+            Request Inspection Panel
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Monitor incoming HTTP requests in real-time. Filter, search, and
+            analyze your webhook traffic.
+          </p>
         </div>
 
-        <div className="md:w-2/3 w-full h-full md:h-auto bg-white overflow-y-auto p-4">
-          <h2 className="text-lg font-semibold mb-4">Details</h2>
-          {selectedRequest ? (
-            <RequestDetails request={selectedRequest} />
-          ) : (
-            <p className="text-muted-foreground">
-              Waiting for requests to be sent...
-            </p>
-          )}
+        {/* <!-- Filter Controls --> */}
+        {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex flex-wrap gap-2">
+              <button className="px-3 py-1.5 bg-[#2563eb] text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
+                All Requests
+              </button>
+              <button className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
+                GET
+              </button>
+              <button className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
+                POST
+              </button>
+              <button className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
+                PUT
+              </button>
+              <button className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
+                DELETE
+              </button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative">
+                <select className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-2 pl-3 pr-8 rounded-md focus:outline-none focus:ring-[#2563eb] focus:border-[#2563eb] text-sm">
+                  <option>Status: All</option>
+                  <option>Status: 2xx</option>
+                  <option>Status: 3xx</option>
+                  <option>Status: 4xx</option>
+                  <option>Status: 5xx</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </div>
+
+              <div className="relative">
+                <select className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-2 pl-3 pr-8 rounded-md focus:outline-none focus:ring-[#2563eb] focus:border-[#2563eb] text-sm">
+                  <option>Time: All</option>
+                  <option>Last 15 minutes</option>
+                  <option>Last hour</option>
+                  <option>Last 6 hours</option>
+                  <option>Last 24 hours</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </div>
+
+              <div className="relative flex-grow">
+                <input
+                  type="text"
+                  placeholder="Search requests..."
+                  className="w-full bg-gray-50 border border-gray-300 text-gray-700 py-2 pl-10 pr-3 rounded-md focus:outline-none focus:ring-[#2563eb] focus:border-[#2563eb] text-sm"
+                />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> */}
+
+        <CopyUrl uuid={uuid} />
+
+        {/* <!-- Real-time Feed --> */}
+        <div className="bg-white mt-4 rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-medium text-[#1e293b]">
+              Incoming Requests
+            </h3>
+            <div className="flex items-center">
+              <span className="relative flex h-3 w-3 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span className="text-sm text-gray-600">Live</span>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            {requests.length === 0 ? (
+              <Empty />
+            ) : (
+              <>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Timestamp
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Method
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Size
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Duration
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    className="bg-white divide-y divide-gray-200"
+                    id="request-list"
+                  >
+                    {requests.map((request, index) => (
+                      <RequestList request={request} key={request.id} />
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
