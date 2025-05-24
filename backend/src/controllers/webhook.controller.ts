@@ -55,8 +55,8 @@ export const handleWebhookRequest = async (
         body: req.body,
         timestamp: new Date(),
         status: res.statusCode || 200, // Use response status code
-        size: totalSize,
-        duration: durationInMs,
+        size: totalSize || 0,
+        duration: durationInMs || 0,
       },
     });
 
